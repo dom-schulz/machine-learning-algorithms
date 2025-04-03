@@ -219,7 +219,7 @@ def entropy(table, label_col):
     return entropy
 ```
 - Results (auto-mpg dataset):
-  - Visualization: ![TDIDT Predict Tree](TDIDT%20Predict%20Tree.pdf)
+  - Visualization: [TDIDT Predict Tree](TDIDT%20Predict%20Tree.pdf)
 
 ### 2. K-Nearest Neighbors (KNN)
 - Logic: Classifies instances based on majority vote of k nearest neighbors
