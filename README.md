@@ -62,11 +62,39 @@ This repository showcases implementations of various machine learning algorithms
      - Tree traversal utilities
      - Visualization support
 
-## Sampling Methods
+## Data Processing
+
+### 1. Data Normalization
+- Logic: Scales numerical features to a standard range (typically 0-1)
+- Purpose: Ensures features contribute equally to distance calculations in kNN algorithm
+- Implementation:
+```python
+def normalize(table, column):
+    """Normalizes values in a column to range [0,1]."""
+    values = [row[column] for row in table]
+    min_val = min(values)
+    max_val = max(values)
+    
+    # Avoid division by zero
+    if max_val == min_val:
+        return
+    
+    # Normalize each value
+    for row in table:
+        row[column] = (row[column] - min_val) / (max_val - min_val)
+```
+- Example Usage:
+```python
+# Normalize displacement and weight for auto-mpg dataset
+normalize(auto, 'disp')
+normalize(auto, 'weight')
+```
+
+### 2. Sampling Methods
 
 Sampling methods are crucial for evaluating machine learning models by splitting data into training and testing sets. Training data is used to build the model, while testing data evaluates its performance on unseen examples.
 
-### 1. Bootstrap Sampling
+#### 1. Bootstrap Sampling
 - Logic: Creates training set by sampling with replacement, remaining samples form testing set
 - Advantage: Useful for small datasets, creates multiple training sets
 - Implementation:
@@ -90,7 +118,7 @@ def bootstrap(table):
     return (training_set, testing_set)
 ```
 
-### 2. Stratified Holdout
+#### 2. Stratified Holdout
 - Logic: Maintains class distribution in both training and testing sets
 - Advantage: Preserves data distribution, crucial for imbalanced datasets
 - Implementation:
@@ -125,7 +153,7 @@ def stratified_holdout(table, label_col, test_size):
     return (training_set, testing_set)
 ```
 
-### 3. Cross-Validation
+#### 3. Cross-Validation
 - Logic: Splits data into k folds, uses each fold as testing set once
 - Advantage: More robust evaluation, uses all data for both training and testing
 - Implementation:
@@ -306,11 +334,59 @@ def k_means(table, initial_centroids, features):
   - Visualization: ![Iris Clusters](iris-clusters.png)
   - Shows clear separation of iris species based on petal and sepal measurements
 
-## Algorithm Comparison
+## Sample Algorithm Comparison
 
-Based on the auto-mpg dataset results:
-1. KNN performs better for class label 1 with higher precision
-2. Naive Bayes shows better performance for class label 3
+### KNN Results (Auto MPG Dataset)
+```
+  Actual     1    2    3
+--------  ----  ---  ---
+       1  1290  168    0
+       2   134  973    0
+       3     0  198    0
+
+Accuracy of Class Label 1: 0.890
+Precision of Class Label 1: 0.905
+Recall of Class Label 1: 0.884
+F Measure of Class Label 1: 0.895
+
+Accuracy of Class Label 2: 0.819
+Precision of Class Label 2: 0.726
+Recall of Class Label 2: 0.878
+F Measure of Class Label 2: 0.795
+
+Accuracy of Class Label 3: 0.928
+Precision of Class Label 3: 0
+Recall of Class Label 3: 0.0
+F Measure of Class Label 3: 0
+```
+
+### Naive Bayes Results (Auto MPG Dataset)
+```
+  Actual     1    2    3
+--------  ----  ---  ---
+       1  1276  182    0
+       2   123  850  134
+       3     0  100   98
+
+Accuracy of Class Label 1: 0.889
+Precision of Class Label 1: 0.912
+Recall of Class Label 1: 0.875
+F Measure of Class Label 1: 0.893
+
+Accuracy of Class Label 2: 0.804
+Precision of Class Label 2: 0.786
+Recall of Class Label 2: 0.707
+F Measure of Class Label 2: 0.744
+
+Accuracy of Class Label 3: 0.915
+Precision of Class Label 3: 0.422
+Recall of Class Label 3: 0.494
+F Measure of Class Label 3: 0.455
+```
+
+Key Observations:
+1. KNN performs better for class label 1 with higher precision (0.905 vs 0.912)
+2. Naive Bayes shows better performance for class label 3, successfully predicting some instances
 3. Both algorithms struggle with class label 2, though Naive Bayes shows slightly better recall
 4. Overall, Naive Bayes provides more balanced performance across classes
 
