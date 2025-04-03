@@ -20,7 +20,15 @@ This repository showcases implementations of various machine learning algorithms
    table.load('auto-mpg.txt')
    ```
 
-2. `data_learn.py`
+2. `data_util.py`
+   - Purpose: Data preprocessing utilities
+   - Includes:
+     - Data cleaning functions
+     - Statistical computations
+     - Feature selection helpers
+     - Data normalization and discretization
+
+3. `data_learn.py`
    - Purpose: Machine learning algorithm implementations
    - Contains:
      - TDIDT (Top-Down Induction of Decision Trees)
@@ -29,7 +37,7 @@ This repository showcases implementations of various machine learning algorithms
      - K-means clustering
      - Random Forest implementation
 
-3. `data_eval.py`
+4. `data_eval.py`
    - Purpose: Model evaluation and testing
    - Features:
      - Sampling methods (bootstrap, stratified holdout)
@@ -37,7 +45,7 @@ This repository showcases implementations of various machine learning algorithms
      - Confusion matrix generation
      - Performance metrics calculation
 
-4. `data_util.py`
+5. `data_util.py`
    - Purpose: Data preprocessing utilities
    - Includes:
      - Data cleaning functions
@@ -47,7 +55,7 @@ This repository showcases implementations of various machine learning algorithms
 
 5. `decision_tree.py`
    - Purpose: Base decision tree structure
-   - Note: This file was provided by the course professor
+   - ***Note: This file was provided by the course professor
    - Provides:
      - Tree node structure
      - Basic tree operations
@@ -255,6 +263,48 @@ Precision of Class Label 1: 0.912
 Recall of Class Label 1: 0.875
 F Measure of Class Label 1: 0.893
 ```
+
+### 4. K-Means Clustering
+- Logic: Groups similar data points into k clusters by minimizing within-cluster variance
+- Key Components:
+  - Centroid initialization
+  - Distance-based cluster assignment
+  - Iterative centroid refinement
+  - Total Sum of Squares (TSS) calculation
+- Implementation:
+```python
+def k_means(table, initial_centroids, features):
+    """Performs k-means clustering on the given data."""
+    k = len(initial_centroids)
+    centroids = initial_centroids
+    old_centroids = None
+    
+    while centroids != old_centroids:
+        # Assign points to nearest centroid
+        clusters = [[] for _ in range(k)]
+        for row in table:
+            min_dist = float('inf')
+            nearest_centroid = 0
+            for i, centroid in enumerate(centroids):
+                dist = calculate_distance(row, centroid, features)
+                if dist < min_dist:
+                    min_dist = dist
+                    nearest_centroid = i
+            clusters[nearest_centroid].append(row)
+        
+        # Update centroids
+        old_centroids = centroids
+        centroids = []
+        for cluster in clusters:
+            if cluster:
+                new_centroid = calculate_centroid(cluster, features)
+                centroids.append(new_centroid)
+    
+    return centroids
+```
+- Results (iris dataset):
+  - Visualization: ![Iris Clusters](iris-clusters.png)
+  - Shows clear separation of iris species based on petal and sepal measurements
 
 ## Algorithm Comparison
 
