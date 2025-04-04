@@ -2,9 +2,7 @@
 
 This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms. The codebase demonstrates practical applications of various machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries.
 
-## Project Structure
-
-### Core Files
+## Core Files
 
 1. `data_table.py`
    - Purpose: Core data structure implementation
