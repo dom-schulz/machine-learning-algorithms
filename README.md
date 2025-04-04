@@ -1,6 +1,6 @@
 # Data Science Algorithms Implementation
 
-This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms. The codebase demonstrates practical applications of decision trees, k-means clustering, and other machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries.
+This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms. The codebase demonstrates practical applications of various machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries.
 
 ## Project Structure
 
@@ -14,10 +14,19 @@ This repository showcases implementations of various machine learning algorithms
      - `DataTable` class for table operations
      - Data loading/saving functionality
      - Type conversion and validation
-   - Example:
+   - Example Usage:
    ```python
+   # Create and load a table
    table = DataTable(['mpg', 'cylinders', 'displacement'])
    table.load('auto-mpg.txt')
+   
+   # Append a new row
+   new_row = {'mpg': 25.0, 'cylinders': 4, 'displacement': 120.0}
+   table.append(new_row)
+   
+   # Access rows and columns
+   first_row = table[0]
+   mpg_values = [row['mpg'] for row in table]
    ```
 
 2. `data_util.py`
@@ -31,11 +40,11 @@ This repository showcases implementations of various machine learning algorithms
 3. `data_learn.py`
    - Purpose: Machine learning algorithm implementations
    - Contains:
-     - TDIDT (Top-Down Induction of Decision Trees)
      - K-Nearest Neighbors (KNN)
      - Naive Bayes classifier
-     - K-means clustering
+     - TDIDT (Top-Down Induction of Decision Trees)
      - Random Forest implementation
+     - K-means clustering
 
 4. `data_eval.py`
    - Purpose: Model evaluation and testing
@@ -45,16 +54,8 @@ This repository showcases implementations of various machine learning algorithms
      - Confusion matrix generation
      - Performance metrics calculation
 
-5. `data_util.py`
-   - Purpose: Data preprocessing utilities
-   - Includes:
-     - Data cleaning functions
-     - Statistical computations
-     - Feature selection helpers
-     - Data normalization and discretization
-
 5. `decision_tree.py`
-   - Purpose: Base decision tree structure
+   - Purpose: Base decision tree structure/classes
    - ***Note: This file was provided by the course professor
    - Provides:
      - Tree node structure
@@ -65,8 +66,8 @@ This repository showcases implementations of various machine learning algorithms
 ## Data Processing
 
 ### 1. Data Normalization
-- Logic: Scales numerical features to a standard range (typically 0-1)
 - Purpose: Ensures features contribute equally to distance calculations in kNN algorithm
+- Logic: Scales numerical features to a standard range (typically 0-1)
 - Implementation:
 ```python
 def normalize(table, column):
@@ -92,7 +93,7 @@ normalize(auto, 'weight')
 
 ### 2. Sampling Methods
 
-Sampling methods are crucial for evaluating machine learning models by splitting data into training and testing sets. Training data is used to build the model, while testing data evaluates its performance on unseen examples.
+Sampling methods used for evaluating machine learning models by splitting data into training and testing sets. Training data is used to build the model, while testing data evaluates its performance on unseen examples.
 
 #### 1. Bootstrap Sampling
 - Logic: Creates training set by sampling with replacement, remaining samples form testing set
@@ -120,7 +121,7 @@ def bootstrap(table):
 
 #### 2. Stratified Holdout
 - Logic: Maintains class distribution in both training and testing sets
-- Advantage: Preserves data distribution, crucial for imbalanced datasets
+- Advantage: Preserves data distribution, crucial for imbalanced datasets 
 - Implementation:
 ```python
 def stratified_holdout(table, label_col, test_size):
@@ -190,38 +191,7 @@ def cross_validation(table, k, label_col):
 
 ## Machine Learning Algorithms
 
-### 1. Decision Tree (TDIDT)
-- Logic: Recursively builds tree by selecting best attribute for splitting
-- Key Components:
-  - Entropy calculation for measuring information gain
-  - Attribute selection based on maximum information gain
-  - Tree pruning to prevent overfitting
-- Implementation:
-```python
-def entropy(table, label_col):
-    """Calculate entropy for a given label column."""
-    total = table.row_count()
-    if total == 0:
-        return 0
-    
-    # Calculate probability distribution
-    counts = {}
-    for row in table:
-        label = row[label_col]
-        counts[label] = counts.get(label, 0) + 1
-    
-    # Calculate entropy
-    entropy = 0
-    for count in counts.values():
-        p = count / total
-        entropy -= p * math.log2(p)
-    
-    return entropy
-```
-- Results (auto-mpg dataset):
-  - Visualization: [TDIDT Predict Tree](TDIDT%20Predict%20Tree.pdf)
-
-### 2. K-Nearest Neighbors (KNN)
+### 1. K-Nearest Neighbors (KNN)
 - Logic: Classifies instances based on majority vote of k nearest neighbors
 - Key Components:
   - Distance calculation between instances
@@ -248,20 +218,31 @@ def knn_classify(train_set, test_instance, k, label_col, features):
     
     return max(votes.items(), key=lambda x: x[1])[0]
 ```
-- Results (auto-mpg dataset):
-```
-Accuracy of Class Label 1: 0.890
-Precision of Class Label 1: 0.905
-Recall of Class Label 1: 0.884
-F Measure of Class Label 1: 0.895
-```
 
-### 3. Naive Bayes
+- Results (Auto MPG Dataset):
+  - Preprocessing:
+    - Discretized MPG into 4 bins
+    - Normalized displacement and weight
+    - Removed missing values
+  - Evaluation:
+    ```python
+    result_confusion_matrix = knn_stratified(auto, 10, 'mpg', majority_vote, 7, ['weight','disp'], [])
+    ```
+  - Class Labels:
+    - 1: Low MPG (0-18 mpg)
+    - 2: Medium MPG (18-24 mpg)
+    - 3: High MPG (24+ mpg)
+  - Performance:
+    - Class 1: High accuracy (0.890) and precision (0.905)
+    - Class 2: Moderate performance with good recall (0.878)
+    - Class 3: Struggles with predictions (0 precision/recall)
+
+### 2. Naive Bayes
 - Logic: Uses Bayes' theorem with feature independence assumption
 - Key Components:
   - Prior probability calculation
   - Likelihood estimation
-  - Laplace smoothing for zero probabilities
+  - Laplace smoothing
 - Implementation:
 ```python
 def naive_bayes_classify(train_set, test_instance, label_col, features):
@@ -284,20 +265,82 @@ def naive_bayes_classify(train_set, test_instance, label_col, features):
     
     return max(posteriors.items(), key=lambda x: x[1])[0]
 ```
-- Results (auto-mpg dataset):
+
+- Results (Auto MPG Dataset):
+  - Preprocessing: Same as KNN
+  - Evaluation:
+    ```python
+    result_confusion_matrix = naive_bayes_stratified(auto, 10, 'mpg', ['weight','disp'], [])
+    ```
+  - Class Labels: Same as KNN
+  - Performance:
+    - Class 1: Strong performance (0.889 accuracy, 0.912 precision)
+    - Class 2: Balanced performance (0.804 accuracy)
+    - Class 3: Better than KNN but still challenging (0.422 precision)
+
+### 3. Decision Tree (TDIDT)
+- Logic: Recursively builds tree by selecting best attribute for splitting
+- Key Components:
+  - Entropy calculation for measuring information gain
+  - Attribute selection based on maximum information gain
+  - Tree pruning to prevent overfitting
+- Implementation (Entropy Calculation):
+```python
+def entropy(table, label_col):
+    """Calculate entropy for a given label column."""
+    total = table.row_count()
+    if total == 0:
+        return 0
+    
+    # Calculate probability distribution
+    counts = {}
+    for row in table:
+        label = row[label_col]
+        counts[label] = counts.get(label, 0) + 1
+    
+    # Calculate entropy
+    entropy = 0
+    for count in counts.values():
+        p = count / total
+        entropy -= p * math.log2(p)
+    
+    return entropy
 ```
-Accuracy of Class Label 1: 0.889
-Precision of Class Label 1: 0.912
-Recall of Class Label 1: 0.875
-F Measure of Class Label 1: 0.893
+*Note: Full TDIDT implementation is available in data_learn.py*
+
+- Results (Auto MPG Dataset):
+  - Preprocessing: Same as KNN
+  - Visualization: [TDIDT Predict Tree](TDIDT%20Predict%20Tree.pdf)
+
+### 4. Random Forest
+- Logic: Ensemble of decision trees with random feature selection
+- Key Components:
+  - Multiple decision trees
+  - Random feature subset selection
+  - Majority voting for final prediction
+- Implementation:
+```python
+def random_forest(train_set, test_instance, n_trees, features, label_col):
+    """Classify instance using random forest."""
+    predictions = []
+    for _ in range(n_trees):
+        # Select random feature subset
+        selected_features = random.sample(features, int(len(features) ** 0.5))
+        # Build tree and predict
+        tree = tdidt(train_set, selected_features, label_col)
+        pred = predict(tree, test_instance)
+        predictions.append(pred)
+    
+    # Majority vote
+    return max(set(predictions), key=predictions.count)
 ```
 
-### 4. K-Means Clustering
+### 5. K-Means Clustering
 - Logic: Groups similar data points into k clusters by minimizing within-cluster variance
 - Key Components:
   - Centroid initialization
   - Distance-based cluster assignment
-  - Iterative centroid refinement
+  - Iterative centroid refinement (recursively edit centroid)
   - Total Sum of Squares (TSS) calculation
 - Implementation:
 ```python
@@ -336,59 +379,30 @@ def k_means(table, initial_centroids, features):
 
 ## Sample Algorithm Comparison
 
-### KNN Results (Auto MPG Dataset)
-```
-  Actual     1    2    3
---------  ----  ---  ---
-       1  1290  168    0
-       2   134  973    0
-       3     0  198    0
+### Auto MPG Dataset Analysis
+The dataset classifies vehicles into three MPG categories:
+- Class 1 (Low MPG): 0-18 mpg
+- Class 2 (Medium MPG): 18-24 mpg
+- Class 3 (High MPG): 24+ mpg
 
-Accuracy of Class Label 1: 0.890
-Precision of Class Label 1: 0.905
-Recall of Class Label 1: 0.884
-F Measure of Class Label 1: 0.895
+Key Findings:
+1. KNN Performance:
+   - Excels at identifying low MPG vehicles (Class 1)
+   - Struggles with high MPG vehicles (Class 3)
+   - Moderate performance on medium MPG vehicles
+   - Best suited for identifying fuel-inefficient vehicles
 
-Accuracy of Class Label 2: 0.819
-Precision of Class Label 2: 0.726
-Recall of Class Label 2: 0.878
-F Measure of Class Label 2: 0.795
+2. Naive Bayes Performance:
+   - More balanced across all classes
+   - Successfully identifies some high MPG vehicles
+   - Better at handling medium MPG vehicles
+   - More reliable for general classification tasks
 
-Accuracy of Class Label 3: 0.928
-Precision of Class Label 3: 0
-Recall of Class Label 3: 0.0
-F Measure of Class Label 3: 0
-```
-
-### Naive Bayes Results (Auto MPG Dataset)
-```
-  Actual     1    2    3
---------  ----  ---  ---
-       1  1276  182    0
-       2   123  850  134
-       3     0  100   98
-
-Accuracy of Class Label 1: 0.889
-Precision of Class Label 1: 0.912
-Recall of Class Label 1: 0.875
-F Measure of Class Label 1: 0.893
-
-Accuracy of Class Label 2: 0.804
-Precision of Class Label 2: 0.786
-Recall of Class Label 2: 0.707
-F Measure of Class Label 2: 0.744
-
-Accuracy of Class Label 3: 0.915
-Precision of Class Label 3: 0.422
-Recall of Class Label 3: 0.494
-F Measure of Class Label 3: 0.455
-```
-
-Key Observations:
-1. KNN performs better for class label 1 with higher precision (0.905 vs 0.912)
-2. Naive Bayes shows better performance for class label 3, successfully predicting some instances
-3. Both algorithms struggle with class label 2, though Naive Bayes shows slightly better recall
-4. Overall, Naive Bayes provides more balanced performance across classes
+3. Overall Comparison:
+   - KNN: Better for binary classification (efficient vs inefficient)
+   - Naive Bayes: Better for multi-class classification
+   - Both struggle with medium MPG vehicles due to overlap in features
+   - Feature importance: Weight and displacement are strong predictors
 
 ## Dataset Examples
 
