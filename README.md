@@ -374,7 +374,7 @@ def k_means(table, initial_centroids, features):
     return centroids
 ```
 - Results (iris dataset):
-  - Visualization: ![Iris Clusters](iris-clusters.png)
+    ![Iris Clusters](iris-clusters.png)
   - Shows clear separation of iris species based on petal and sepal measurements
 
 ## Sample Algorithm Comparison
