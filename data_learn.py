@@ -1,4 +1,6 @@
-"""Machine learning algorithm implementations.
+"""
+
+Machine learning algorithm implementations.
 
 NAME: Dominick Schulz
 DATE: Fall 2023
@@ -13,10 +15,6 @@ from decision_tree import *
 from random import randint
 import math
 
-
-#----------------------------------------------------------------------
-# HW-8
-#----------------------------------------------------------------------
 
 
 def random_subset(F, columns):
