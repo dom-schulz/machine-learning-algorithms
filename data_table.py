@@ -1,5 +1,5 @@
 """
-HW-6 Data Table
+Data Table
 
 NAME: Dominick Schulz
 DATE: Fall 2023
