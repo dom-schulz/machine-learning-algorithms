@@ -1,4 +1,4 @@
-# Data Science Algorithms
+# Data Science Algorithms Implementation
 
 This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms. The codebase demonstrates practical applications of various machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries.
 
@@ -414,13 +414,12 @@ The repository includes several datasets for testing and demonstration:
 
 ### Data Processing
 - Efficient matrix operations for large datasets
-- Memory-optimized data structures
 - Type-safe data handling
 - Robust error handling and validation
 
 ### Algorithm Optimization
 - Vectorized operations where possible
-- Efficient data structures for nearest neighbor search
+- Efficient data structures for all algorithms
 - Optimized probability calculations for Naive Bayes
 - Smart pruning strategies for decision trees
 
