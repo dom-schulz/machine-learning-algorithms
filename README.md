@@ -1,8 +1,29 @@
-# Data Science Algorithms Implementation
+# Data Science Algorithms Implementation (12/25/23)
 
-This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms at Gonzaga University. The codebase demonstrates practical applications of various machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries.
+This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms at Gonzaga University. The codebase demonstrates practical applications of various machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries. The [`sample_project.ipynb`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/sample_project.ipynb) file displays a use case of these algorithms.
+
 
 ## Core Files
+
+[`sample_project.ipynb`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/sample_project.ipynb)
+   - Purpose: Display an implementation of data analysis/visualization and with these algorithms
+   - Demonstrates:
+     - Data analysis and preprocessing
+     - Feature selection and engineering
+     - Model development and evaluation
+     - Ensemble approach combining Naive Bayes and kNN
+   - Final Model:
+     - Weighted ensemble of Naive Bayes and kNN classifiers
+     - Combines probabilistic and distance-based approaches
+     - Leverages strengths of both algorithms for improved accuracy
+   - Implementation Challenges:
+     - TDIDT function optimization and debugging (when comparing with naive bayes kNN ensemble)
+     - Data cleaning and preprocessing pipeline
+     - Feature selection and importance analysis
+     - Train/test split strategy
+     - Model evaluation and performance metrics
+   - For detailed analysis of data cleaning and preprocessing steps, please refer to the notebook linked above
+
 
 [`data_table.py`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/data_table.py)
    - Purpose: Core data structure implementation
@@ -61,6 +82,7 @@ This repository showcases implementations of various machine learning algorithms
      - Tree traversal utilities
      - Visualization support
 
+
 ## Data Processing
 
 ### 1. Data Normalization
@@ -89,7 +111,7 @@ normalize(auto, 'disp')
 normalize(auto, 'weight')
 ```
 
-### 2. Sampling Methods
+### Sampling Methods
 
 Sampling methods used for evaluating machine learning models by splitting data into training and testing sets. Training data is used to build the model, while testing data evaluates its performance on unseen examples.
 
@@ -189,7 +211,7 @@ def cross_validation(table, k, label_col):
 
 ## Machine Learning Algorithms
 
-### 1. K-Nearest Neighbors (KNN)
+### K-Nearest Neighbors (KNN)
 - Logic: Classifies instances based on majority vote of k nearest neighbors
 - Key Components:
   - Distance calculation between instances
@@ -235,7 +257,7 @@ def knn_classify(train_set, test_instance, k, label_col, features):
     - Class 2: Moderate performance with good recall (0.878)
     - Class 3: Struggles with predictions (0 precision/recall)
 
-### 2. Naive Bayes
+### Naive Bayes
 - Logic: Uses Bayes' theorem with feature independence assumption
 - Key Components:
   - Prior probability calculation
@@ -276,7 +298,7 @@ def naive_bayes_classify(train_set, test_instance, label_col, features):
     - Class 2: Balanced performance (0.804 accuracy)
     - Class 3: Better than KNN but still challenging (0.422 precision)
 
-### 3. Decision Tree (TDIDT)
+### Decision Tree (TDIDT)
 - Logic: Recursively builds tree by selecting best attribute for splitting
 - Key Components:
   - Entropy calculation for measuring information gain
@@ -310,7 +332,7 @@ def entropy(table, label_col):
   - Preprocessing: Same as KNN
   - Visualization: [TDIDT Predict Tree](TDIDT%20Predict%20Tree.pdf)
 
-### 4. Random Forest
+### Random Forest
 - Logic: Ensemble of decision trees with random feature selection
 - Key Components:
   - Multiple decision trees
@@ -333,7 +355,7 @@ def random_forest(train_set, test_instance, n_trees, features, label_col):
     return max(set(predictions), key=predictions.count)
 ```
 
-### 5. K-Means Clustering
+### K-Means Clustering
 - Logic: Groups similar data points into k clusters by minimizing within-cluster variance
 - Key Components:
   - Centroid initialization
@@ -375,32 +397,6 @@ def k_means(table, initial_centroids, features):
     ![Iris Clusters](iris-clusters.png)
   - Shows clear separation of iris species based on petal and sepal measurements
 
-## Sample Algorithm Comparison
-
-### Auto MPG Dataset Analysis
-The dataset classifies vehicles into three MPG categories:
-- Class 1 (Low MPG): 0-18 mpg
-- Class 2 (Medium MPG): 18-24 mpg
-- Class 3 (High MPG): 24+ mpg
-
-Key Findings:
-1. KNN Performance:
-   - Excels at identifying low MPG vehicles (Class 1)
-   - Struggles with high MPG vehicles (Class 3)
-   - Moderate performance on medium MPG vehicles
-   - Best suited for identifying fuel-inefficient vehicles
-
-2. Naive Bayes Performance:
-   - More balanced across all classes
-   - Successfully identifies some high MPG vehicles
-   - Better at handling medium MPG vehicles
-   - More reliable for general classification tasks
-
-3. Overall Comparison:
-   - KNN: Better for binary classification (efficient vs inefficient)
-   - Naive Bayes: Better for multi-class classification
-   - Both struggle with medium MPG vehicles due to overlap in features
-   - Feature importance: Weight and displacement are strong predictors
 
 ## Dataset Examples
 
@@ -409,6 +405,8 @@ The repository includes several datasets for testing and demonstration:
 - `iris.txt`: Classic iris flower measurements
 - `titanic.txt`: Passenger information from the Titanic
 - `student-stress.txt`: Student stress level indicators
+- `use_census.csv`: US Census demographic data
+- `use_kc_housing.csv`: King County housing market data
 
 ## Technical Implementation Details
 

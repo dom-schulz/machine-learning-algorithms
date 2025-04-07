@@ -12,11 +12,166 @@ from data_table import DataTable, DataRow
 import matplotlib.pyplot as plt
 
 
-#----------------------------------------------------------------------
-# HW5
-#----------------------------------------------------------------------
 
-# added 
+def calculate_averages(result_confusion_matrix):
+    def accuracy(confusion_matrix, label):
+        """Returns the accuracy for the given label from the confusion matrix.
+        
+        Args:
+            confusion_matrix: The confusion matrix.
+            label: The class label to measure the accuracy of.
+
+        """
+        true_positives = 0
+        true_negatives = 0
+        false_positives = 0
+        false_negatives = 0
+        
+        i = 0
+        for col in confusion_matrix.columns():
+            if i > 0:
+                for row in confusion_matrix:    
+                    # checks if column is the label we are checking
+                    if col == label:
+                        if row[confusion_matrix.columns()[0]] == col:
+                            true_positives += row[col]
+                        else:
+                            false_positives += row[col]
+                    else:
+                        if row[confusion_matrix.columns()[0]] == label:
+                            false_negatives += row[col]
+                        else:
+                            true_negatives += row[col]
+            i += 1   
+        
+        try: 
+            accuracy_num = (true_positives + true_negatives) / (true_positives + true_negatives + false_positives + false_negatives)
+            
+            return accuracy_num     
+        except ZeroDivisionError:
+            return 0 
+    
+    def f_measure(matrix, label):
+        precision_val = precision(matrix, label)
+        recall_val = recall(matrix, label)
+        return (2 * recall_val * precision_val) / (recall_val + precision_val)
+    
+    def precision(confusion_matrix, label):
+        """Returns the precision for the given label from the confusion
+        matrix.
+
+        Args:
+            confusion_matrix: The confusion matrix.
+            label: The class label to measure the precision of.
+
+        """
+        true_positives = 0
+        true_negatives = 0
+        false_positives = 0
+        false_negatives = 0
+        
+        i = 0
+        for col in confusion_matrix.columns():
+            if i > 0:
+                for row in confusion_matrix:    
+                    # checks if column is the label we are checking
+                    if col == label:
+                        if row[confusion_matrix.columns()[0]] == col:
+                            true_positives += row[col]
+                        else:
+                            false_positives += row[col]
+                    else:
+                        if row[confusion_matrix.columns()[0]] == label:
+                            false_negatives += row[col]
+                        else:
+                            true_negatives += row[col]
+            i += 1   
+        return_precision = true_positives / (true_positives + false_positives)
+        return return_precision
+    
+    def recall(confusion_matrix, label): 
+        """Returns the recall for the given label from the confusion matrix.
+
+        Args:
+            confusion_matrix: The confusion matrix.
+            label: The class label to measure the recall of.
+
+        """
+        true_positives = 0
+        true_negatives = 0
+        false_positives = 0
+        false_negatives = 0
+        
+        i = 0
+        for col in confusion_matrix.columns():
+            if i > 0:
+                for row in confusion_matrix:    
+                    # checks if column is the label we are checking
+                    if col == label:
+                        if row[confusion_matrix.columns()[0]] == col:
+                            true_positives += row[col]
+                        else:
+                            false_positives += row[col]
+                    else:
+                        if row[confusion_matrix.columns()[0]] == label:
+                            false_negatives += row[col]
+                        else:
+                            true_negatives += row[col]
+            i += 1   
+            
+        return true_positives / (true_positives + false_negatives)
+    
+    
+    total_accuracy = 0
+    total_precision = 0
+    total_recall = 0
+    total_f_measure = 0
+    num_classes = result_confusion_matrix.row_count()
+
+    for row in result_confusion_matrix:
+        try:
+            accuracy_value = accuracy(result_confusion_matrix, row['Actual'])
+            total_accuracy += accuracy_value
+            
+        except ZeroDivisionError:
+            pass
+            
+        try:
+            precision_value = precision(result_confusion_matrix, row['Actual'])
+            total_precision += precision_value
+            
+        except ZeroDivisionError:
+            pass
+            
+        try:
+            recall_value = recall(result_confusion_matrix, row['Actual'])
+            total_recall += recall_value
+
+        except ZeroDivisionError:
+            pass
+        try:
+            f_measure_value = f_measure(result_confusion_matrix, row['Actual'])
+            total_f_measure += f_measure_value
+
+        except ZeroDivisionError:
+            pass
+
+    # Calculate averages
+    avg_accuracy = total_accuracy / num_classes
+    avg_precision = total_precision / num_classes
+    avg_recall = total_recall / num_classes
+    avg_f_measure = total_f_measure / num_classes
+
+    # Print averages
+    print(f'Average Accuracy: {avg_accuracy}')
+    print(f'Average Precision: {avg_precision}')
+    print(f'Average Recall: {avg_recall}')
+    print(f'Average F Measure: {avg_f_measure}')
+
+    return
+
+
+
 def normalize(table, column):
     """Normalize the values in the given column of the table. This
     function modifies the table.

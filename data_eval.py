@@ -12,10 +12,134 @@ from data_learn import *
 from random import randint
 
 
+# For simple, custom ensemble voting
+def naive_knn(train_set, test_set, k, vote_fun, label_col, cont_cols, cat_cols=[]):
+        # create list of all potential values in label_col
+    label_col_vals = []
+    
+    for row in train_set:
+        if row[label_col] not in label_col_vals:
+            label_col_vals.append(row[label_col])
+    for row in test_set:
+        if row[label_col] not in label_col_vals:
+            label_col_vals.append(row[label_col])
+        
 
-#----------------------------------------------------------------------
-# HW-8
-#----------------------------------------------------------------------
+    
+    # create confusion matrix and initialize it with predicted columns
+    matrix_columns = []
+    matrix_columns.append('Actual')
+    for col_index in range(len(label_col_vals)):
+        matrix_columns.append(label_col_vals[col_index])
+        
+        
+    confusion_matrix = DataTable(matrix_columns)
+
+    predicted_col_vals = label_col_vals
+    for actual_val in label_col_vals:
+        row_values = [actual_val]
+        for pred_val in predicted_col_vals:
+            row_values.append(0)
+        
+        # appends the generated row to the matrix table
+        append_row = DataRow(matrix_columns, row_values)
+        confusion_matrix.append(append_row.values())
+            
+    
+    for row in test_set:
+        prediction_val_naive = naive_bayes(train_set, row, label_col, cont_cols, cat_cols)[0][0]
+        nearest_neighbors_dict = knn(train_set, row, k, cont_cols, cat_cols)
+        
+        # extracts and makes a list of the rows in the dictionary, and scores list
+        nearest_neighbors_rows = []
+        scores = []
+        for dist_val in nearest_neighbors_dict:
+            scores.append(0 - dist_val)
+            for row_index in range(len(nearest_neighbors_dict[dist_val])):
+                nearest_neighbors_rows.append(nearest_neighbors_dict[dist_val][row_index])
+
+        
+        # guesses label based on which function was inputted
+        # prediction will just be the first label returned
+        prediction_val_knn = []
+        prediction_val_knn = vote_fun(nearest_neighbors_rows, scores, label_col)
+        
+        prediction_val_knn = prediction_val_knn[0]
+        
+        weight_naive = 0.8
+        weight_knn = 0.2
+
+        prediction_val = int(weight_naive * prediction_val_naive + weight_knn * prediction_val_knn)
+        
+        actual_val = row[label_col]
+
+        for row_index in range(len(label_col_vals)):
+            
+            if label_col_vals[row_index] == actual_val:
+                confusion_matrix.update(row_index, prediction_val, (confusion_matrix[row_index][prediction_val] + 1))
+    
+    return confusion_matrix
+
+
+
+def percentage_stratified_holdout(table, label_col, test_set_size, training_set_size):
+    """Partitions the table into a training and test set using the holdout
+    method such that the test set has a similar distribution as the
+    table.
+
+    Args:
+        table: The table to partition.
+        label_col: The column with the class labels. 
+        test_set_size: The number of rows to include in the test set.
+
+    Returns: The pair (training_set, test_set)
+
+    """
+
+    test_set = DataTable(table.columns())
+    training_set = DataTable(table.columns())    
+    
+    partitioned_tables = partition(table, [label_col])
+    
+    percentage_dict = {}
+    
+    for part_table in partitioned_tables:
+        percentage = part_table.row_count() / table.row_count()
+        
+        percentage_dict[part_table[0][label_col]] = part_table.row_count()
+        
+        num_rows_to_add = math.ceil(percentage * test_set_size)
+
+        num_train_rows = math.ceil(percentage * training_set_size)
+        
+        partition_test_indexes = []
+        
+        for row_index in range(num_rows_to_add):
+            appended = False
+
+            while not appended:
+                rand_int = randint(0, part_table.row_count() - 1)
+
+                if rand_int not in partition_test_indexes:
+                    test_set.append(part_table[rand_int].values())
+                    partition_test_indexes.append(rand_int)
+                    appended = True
+            
+        for row_index in range(num_train_rows):
+            appended = False
+
+            while not appended:
+                rand_int = randint(0, part_table.row_count() - 1)
+
+                if rand_int not in partition_test_indexes:
+                    training_set.append(part_table[row_index].values())
+                    partition_test_indexes.append(rand_int)
+                    appended = True
+
+    return training_set, test_set
+
+
+
 
 def bootstrap(table): 
     """Creates a training and testing set using the bootstrap method.
@@ -537,16 +661,16 @@ def naive_bayes_eval(train, test, label_col, continuous_cols, categorical_cols=[
         if row[label_col] not in label_col_vals:
             label_col_vals.append(row[label_col])
         
-    
-    confusion_matrix = DataTable(matrix_columns)
-
-    
     # create confusion matrix and initialize it with predicted columns
     matrix_columns = []
     matrix_columns.append('Actual')
     for col_index in range(len(label_col_vals)):
         matrix_columns.append(label_col_vals[col_index])
-        
+    
+    confusion_matrix = DataTable(matrix_columns)
+
+    
+    # initialize matrix with zeros
     predicted_col_vals = label_col_vals
     for actual_val in label_col_vals:
         row_values = [actual_val]
