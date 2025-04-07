@@ -1,5 +1,5 @@
-"""Classes and functions for representing and drawing basic decision
-trees.
+"""
+Classes and functions for representing and drawing basic decision trees.
 
 NAME: S. Bowers
 DATE: Fall 2023
