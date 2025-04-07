@@ -6,7 +6,7 @@ This repository showcases implementations of various machine learning algorithms
 ## Core Files
 
 [`sample_project.ipynb`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/sample_project.ipynb)
-   - Purpose: Display an implementation of data analysis/visualization and with these algorithms
+   - Purpose: Display an implementation of data analysis/visualization with these algorithms
    - Demonstrates:
      - Data analysis and preprocessing
      - Feature selection and engineering
