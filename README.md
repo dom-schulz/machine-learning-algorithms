@@ -4,7 +4,7 @@ This repository showcases implementations of various machine learning algorithms
 
 ## Core Files
 
-1. `data_table.py`
+1. [`data_table.py`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/data_table.py)
    - Purpose: Core data structure implementation
    - Similar to pandas/numpy but with explicit implementation
    - Key components:
@@ -27,7 +27,7 @@ This repository showcases implementations of various machine learning algorithms
    mpg_values = [row['mpg'] for row in table]
    ```
 
-2. `data_util.py`
+2. [`data_util.py`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/data_util.py)
    - Purpose: Data preprocessing utilities
    - Includes:
      - Data cleaning functions
@@ -35,7 +35,7 @@ This repository showcases implementations of various machine learning algorithms
      - Feature selection helpers
      - Data normalization and discretization
 
-3. `data_learn.py`
+3. [`data_learn.py`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/data_learn.py)
    - Purpose: Machine learning algorithm implementations
    - Contains:
      - K-Nearest Neighbors (KNN)
@@ -44,7 +44,7 @@ This repository showcases implementations of various machine learning algorithms
      - Random Forest implementation
      - K-means clustering
 
-4. `data_eval.py`
+4. [`data_eval.py`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/data_eval.py)
    - Purpose: Model evaluation and testing
    - Features:
      - Sampling methods (bootstrap, stratified holdout)
@@ -52,7 +52,7 @@ This repository showcases implementations of various machine learning algorithms
      - Confusion matrix generation
      - Performance metrics calculation
 
-5. `decision_tree.py`
+5. [`decision_tree.py`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/decision_tree.py)
    - Purpose: Base decision tree structure/classes
    - ***Note: This file was provided by the course professor
    - Provides:
