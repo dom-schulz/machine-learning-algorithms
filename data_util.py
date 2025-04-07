@@ -1,4 +1,5 @@
-"""Data utility functions.
+"""
+Data utility functions.
 
 NAME: Dominick Schulz
 DATE: Fall 2023
