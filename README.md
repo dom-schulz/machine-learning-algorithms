@@ -1,4 +1,4 @@
-# Data Science Algorithms Implementation (12/25/23)
+# Data Science Algorithms Implementation (12/15/23)
 
 This repository showcases implementations of various machine learning algorithms and data handling utilities developed for CPSC 322: Data Science Algorithms at Gonzaga University. The codebase demonstrates practical applications of various machine learning concepts, with a focus on explicit implementation rather than relying on high-level libraries. The [`sample_project.ipynb`](https://github.com/dom-schulz/machine-learning-algorithms/blob/main/sample_project.ipynb) file displays a use case of these algorithms.
 
