@@ -17,7 +17,6 @@ This repository showcases implementations of various machine learning algorithms
      - Combines probabilistic and distance-based approaches
      - Leverages strengths of both algorithms for improved accuracy
    - Implementation Challenges:
-     - TDIDT function optimization and debugging (when comparing with naive bayes kNN ensemble)
      - Data cleaning and preprocessing pipeline
      - Feature selection and importance analysis
      - Train/test split strategy
